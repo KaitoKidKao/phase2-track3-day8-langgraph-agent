@@ -2,7 +2,56 @@
 
 Build a production-style LangGraph workflow for a support-ticket agent with state management, conditional routing, retry loops, human-in-the-loop approval, persistence, and metrics.
 
-This is a **starter skeleton**. Core logic is left as `TODO(student)` — implement your own design.
+---
+
+## 🚀 Lab 22 Implementation Highlights
+
+The project has been evolved from the starter skeleton into a robust agentic system with the following advanced features:
+
+- **Semantic Routing Engine**: Uses a keyword-based heuristic with priority logic (Risky > Tool > Missing Info > Error > Simple).
+- **SQLite Persistence**: Integrated `SqliteSaver` in WAL mode for thread-safe state management and recovery.
+- **Human-in-the-Loop (HITL)**: Mandatory approval flow for risky actions (refunds, deletions) with UI integration.
+- **Interactive Dashboard**: A custom Streamlit UI for real-time interaction, node execution tracking, and state visualization.
+- **Time Travel**: Built-in state history exploration allowing you to view and audit previous execution steps.
+
+---
+
+## 🎮 How to Run (Current Version)
+
+### 1. Installation
+Ensure you have Python 3.11+ and install the dependencies in editable mode:
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+```
+
+### 2. Environment Setup
+Copy the `.env.example` to `.env` and fill in your keys:
+```bash
+cp .env.example .env
+```
+
+### 3. Launch the Interactive UI (Recommended)
+Experience the agent with a real-time chat interface and state auditing:
+```bash
+streamlit run scratch/app.py
+```
+
+### 4. Run Automated Scenario Tests
+Execute all 7+ support scenarios and generate the performance metrics:
+```bash
+make run-scenarios
+```
+Results will be saved to `outputs/metrics.json`.
+
+### 5. Generate Architecture Diagram
+Visualize the LangGraph workflow:
+```bash
+python scratch/generate_diagram.py
+```
+
+---
 
 ---
 
@@ -179,6 +228,9 @@ Pick one or more:
 | `make run-scenarios` | Execute all scenarios → `outputs/metrics.json` |
 | `make grade-local` | Validate metrics.json schema |
 | `make clean` | Remove caches and generated files |
+| `streamlit run scratch/app.py` | Launch the Streamlit chat interface |
+| `python scratch/run_lab.py` | Run scenarios via simplified script |
+| `python scratch/generate_diagram.py` | Generate graph diagram image |
 
 ---
 
