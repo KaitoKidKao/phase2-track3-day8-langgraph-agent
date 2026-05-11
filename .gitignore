@@ -26,12 +26,12 @@ env/
 # reports/lab_report.md
 
 # Persistence
-checkpoints.db
-checkpoints.db-wal
-checkpoints.db-shm
-checkpoints.sqlite
-checkpoints.sqlite-wal
-checkpoints.sqlite-shm
+# checkpoints.db
+# checkpoints.db-wal
+# checkpoints.db-shm
+# checkpoints.sqlite
+# checkpoints.sqlite-wal
+# checkpoints.sqlite-shm
 
 # Testing
 .pytest_cache/

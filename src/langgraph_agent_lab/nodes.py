@@ -55,13 +55,13 @@ Output only the category name."""
         clean_words = [w.strip("?!.,;:") for w in words]
         
         # 1. Risky (Sensitive actions - Highest priority)
-        if any(kw in query for kw in {"refund", "delete", "cancel", "money back", "email address"}):
+        if any(kw in query for kw in {"refund", "delete", "cancel", "money back", "email address", "remove", "revoke", "bulk", "security", "access", "profile"}):
             route_str = Route.RISKY.value
         # 2. Tool (Data lookup/search)
         elif any(kw in query for kw in {"status", "order", "lookup", "check", "track", "find", "search", "looking for", "compatible"}):
             route_str = Route.TOOL.value
         # 3. Error (Technical failures)
-        elif any(kw in query for kw in {"timeout", "fail", "error", "crash", "freeze", "freezing", "failure", "issue", "problem"}):
+        elif any(kw in query for kw in {"timeout", "fail", "error", "crash", "freeze", "freezing", "failure", "issue", "problem", "unavailable", "broken", "failed"}):
             route_str = Route.ERROR.value
         # 4. Missing Info (Vague or extremely short queries)
         elif (len(clean_words) < 5 and any(w in clean_words for w in ["it", "this", "that", "fix", "help"])) or "not working" in query:

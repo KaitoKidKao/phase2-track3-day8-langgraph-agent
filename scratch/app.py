@@ -122,5 +122,8 @@ if history_list:
     with st.expander("View State Snapshot"):
         st.json(past_state.values)
         if st.button("Restore to this state"):
-            # In a real app, you'd might want to branch or fork
-            st.warning("State restoration logic can be complex in branched graphs.")
+            # Restore logic: Overwrite current state with past state values
+            # This creates a new checkpoint that matches the past state
+            graph.update_state(config, past_state.values)
+            st.success(f"🕰️ Restored to Step {len(history_list)-selected_idx}! Next interaction will start from this point.")
+            st.rerun()
