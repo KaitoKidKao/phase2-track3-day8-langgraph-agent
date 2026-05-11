@@ -89,13 +89,21 @@ def ask_clarification_node(state: AgentState) -> dict:
 
 
 def tool_node(state: AgentState) -> dict:
-    """Call a mock tool with transient failure simulation."""
+    """Call a mock tool with transient failure simulation.
+
+    Reduced to 1 retry failure (attempt < 1) to avoid excessive retries.
+    S07 (max_attempts=1) will still hit dead-letter because it routes error -> retry immediately.
+    """
     attempt = int(state.get("attempt", 0))
+    scenario_id = state.get("scenario_id", "unknown")
+    route = state.get("route")
+
     # Simulate transient failure for ERROR route specifically
-    if state.get("route") == Route.ERROR.value and attempt < 2:
-        result = f"ERROR: transient failure attempt={attempt} scenario={state.get('scenario_id', 'unknown')}"
+    # Changed from attempt < 2 to attempt < 1 to reduce total retry count
+    if route == Route.ERROR.value and attempt < 1:
+        result = f"ERROR: transient failure attempt={attempt} scenario={scenario_id}"
     else:
-        result = f"SUCCESS: mock-tool-result for scenario={state.get('scenario_id', 'unknown')}"
+        result = f"SUCCESS: mock-tool-result for scenario={scenario_id}"
 
     return {
         "tool_results": [result],
