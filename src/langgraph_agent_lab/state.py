@@ -57,6 +57,9 @@ class AgentState(TypedDict, total=False):
     proposed_action: str | None
     approval: dict[str, Any] | None
     evaluation_result: str | None
+    is_satisfied: bool
+    reflection_report: str | None
+    research_context: Annotated[list[str], add]
     messages: Annotated[list[str], add]
     tool_results: Annotated[list[str], add]
     errors: Annotated[list[str], add]
@@ -80,21 +83,47 @@ class Scenario(BaseModel):
         return value
 
 
-def initial_state(scenario: Scenario) -> AgentState:
-    """Create a serializable initial state for one scenario."""
+def initial_state(scenario: Scenario | None = None) -> AgentState:
+    """Create a serializable initial state. Supports optional scenario for manual testing."""
+    if scenario:
+        return {
+            "thread_id": f"thread-{scenario.id}",
+            "scenario_id": scenario.id,
+            "query": scenario.query,
+            "route": "",
+            "risk_level": "unknown",
+            "attempt": 0,
+            "max_attempts": scenario.max_attempts,
+            "final_answer": None,
+            "pending_question": None,
+            "proposed_action": None,
+            "approval": None,
+            "evaluation_result": None,
+            "is_satisfied": True,
+            "reflection_report": None,
+            "research_context": [],
+            "messages": [],
+            "tool_results": [],
+            "errors": [],
+            "events": [],
+        }
+    
     return {
-        "thread_id": f"thread-{scenario.id}",
-        "scenario_id": scenario.id,
-        "query": scenario.query,
+        "thread_id": "manual-thread",
+        "scenario_id": "manual",
+        "query": "",
         "route": "",
         "risk_level": "unknown",
         "attempt": 0,
-        "max_attempts": scenario.max_attempts,
+        "max_attempts": 3,
         "final_answer": None,
         "pending_question": None,
         "proposed_action": None,
         "approval": None,
         "evaluation_result": None,
+        "is_satisfied": True,
+        "reflection_report": None,
+        "research_context": [],
         "messages": [],
         "tool_results": [],
         "errors": [],

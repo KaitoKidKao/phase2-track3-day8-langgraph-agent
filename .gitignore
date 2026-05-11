@@ -29,6 +29,9 @@ reports/lab_report.md
 checkpoints.db
 checkpoints.db-wal
 checkpoints.db-shm
+checkpoints.sqlite
+checkpoints.sqlite-wal
+checkpoints.sqlite-shm
 
 # Testing
 .pytest_cache/

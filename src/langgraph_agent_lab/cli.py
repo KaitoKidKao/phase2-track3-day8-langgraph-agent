@@ -21,8 +21,8 @@ app = typer.Typer(no_args_is_help=True)
 
 @app.command("run-scenarios")
 def run_scenarios(
-    config: Annotated[Path, typer.Option("--config")],
-    output: Annotated[Path, typer.Option("--output")],
+    config: Path = typer.Option(..., "--config"),
+    output: Path = typer.Option(..., "--output"),
 ) -> None:
     """Run all grading scenarios and write metrics JSON."""
     cfg = yaml.safe_load(config.read_text(encoding="utf-8"))

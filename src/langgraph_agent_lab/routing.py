@@ -5,12 +5,14 @@ from __future__ import annotations
 from .state import AgentState, Route
 
 
-def route_after_classify(state: AgentState) -> str:
+def route_after_classify(state: AgentState) -> str | list[str]:
     """Map classified route to the next graph node.
 
     TODO(student): handle unknown routes safely and update tests for edge cases.
     """
     route = state.get("route", Route.SIMPLE.value)
+    if route == Route.TOOL.value:
+        return ["research", "rag", "tool"]
     mapping = {
         Route.SIMPLE.value: "answer",
         Route.TOOL.value: "tool",
@@ -49,3 +51,8 @@ def route_after_approval(state: AgentState) -> str:
     """
     approval = state.get("approval") or {}
     return "tool" if approval.get("approved") else "clarify"
+def route_after_reflection(state: AgentState) -> str:
+    """Route after reflection: end if satisfied, otherwise rewrite."""
+    if state.get("is_satisfied", True):
+        return "finalize"
+    return "answer"
