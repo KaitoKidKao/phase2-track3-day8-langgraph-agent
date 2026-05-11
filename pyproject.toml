@@ -50,3 +50,6 @@ ignore = ["ANN101", "ANN102"]
 minversion = "8.0"
 addopts = "-q --strict-markers"
 testpaths = ["tests"]
+filterwarnings = [
+    "ignore::langchain_core._api.deprecation.LangChainPendingDeprecationWarning",
+]

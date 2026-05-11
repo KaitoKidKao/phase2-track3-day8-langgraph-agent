@@ -4,7 +4,7 @@ from langgraph_agent_lab.state import Route
 
 def test_route_after_classify():
     assert route_after_classify({"route": Route.SIMPLE.value}) == "answer"
-    assert route_after_classify({"route": Route.TOOL.value}) == "tool"
+    assert route_after_classify({"route": Route.TOOL.value}) == ["research", "rag", "tool"]
     assert route_after_classify({"route": Route.RISKY.value}) == "risky_action"
 
 

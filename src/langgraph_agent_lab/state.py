@@ -52,6 +52,8 @@ class AgentState(TypedDict, total=False):
     risk_level: str
     attempt: int
     max_attempts: int
+    reflection_count: int
+    max_reflections: int
     final_answer: str | None
     pending_question: str | None
     proposed_action: str | None
@@ -94,6 +96,8 @@ def initial_state(scenario: Scenario | None = None) -> AgentState:
             "risk_level": "unknown",
             "attempt": 0,
             "max_attempts": scenario.max_attempts,
+            "reflection_count": 0,
+            "max_reflections": 3,
             "final_answer": None,
             "pending_question": None,
             "proposed_action": None,
@@ -116,6 +120,8 @@ def initial_state(scenario: Scenario | None = None) -> AgentState:
         "risk_level": "unknown",
         "attempt": 0,
         "max_attempts": 3,
+        "reflection_count": 0,
+        "max_reflections": 3,
         "final_answer": None,
         "pending_question": None,
         "proposed_action": None,
