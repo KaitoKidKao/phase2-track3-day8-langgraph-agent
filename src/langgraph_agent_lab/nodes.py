@@ -28,30 +28,28 @@ def classify_node(state: AgentState) -> dict:
     """Classify the query using LLM if available, fallback to keywords."""
     query = state.get("query", "").lower()
     openai_api_key = os.getenv("OPENAI_API_KEY")
-    
+    route_str = None
+
     if openai_api_key:
         try:
             llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"), temperature=0)
-            prompt = f"""Phân loại yêu cầu của khách hàng sau đây vào một trong các loại: simple, tool, missing_info, risky, error.
-            
-            - risky: Các yêu cầu nhạy cảm như xóa tài khoản, hoàn tiền, thay đổi cài đặt quan trọng.
-            - tool: Các yêu cầu tra cứu thông tin đơn hàng, trạng thái, hoặc tìm kiếm.
-            - missing_info: Các yêu cầu quá ngắn hoặc mơ hồ.
-            - error: Các yêu cầu báo lỗi kỹ thuật hoặc sự cố.
-            - simple: Các yêu cầu chào hỏi hoặc giải đáp thông tin chung.
-            
-            Yêu cầu: {query}
-            
-            Chỉ trả về duy nhất một từ khóa của loại đó."""
+            prompt = f"""You are a support agent classifier. Classify the user query into exactly ONE category:
+- risky: Sensitive actions like refunds, account deletion, or security changes.
+- tool: Data lookups, order status, or product searches.
+- missing_info: Vague or extremely short queries (e.g., "help", "fix it").
+- error: Technical failures, crashes, or system issues.
+- simple: General greetings or non-technical info.
+
+User Query: "{query}"
+Output only the category name."""
             response = llm.invoke(prompt)
-            route_str = response.content.strip().lower()
-            # Validate output
-            valid_routes = [r.value for r in Route]
-            if route_str not in valid_routes:
-                route_str = Route.SIMPLE.value
-        except Exception:
-            route_str = Route.SIMPLE.value # Simple fallback
-    else:
+            candidate = response.content.strip().lower()
+            if candidate in [r.value for r in Route]:
+                route_str = candidate
+        except Exception as e:
+            print(f"LLM fail: {e}. Falling back to keywords.")
+
+    if not route_str:
         # Final refined keyword logic for 100% scenario coverage
         words = query.split()
         clean_words = [w.strip("?!.,;:") for w in words]
